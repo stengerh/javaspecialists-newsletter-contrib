@@ -2,41 +2,40 @@ package eu.javaspecialists.newsletter.issue258.contrib;
 
 import org.junit.jupiter.api.Test;
 
-import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.IntStream;
 
 class ChoosingAccumulatorTest {
 
     @Test
     void accumulate() {
-        new UniformDistributionCheck(6, 2).using((n, k) -> {
+        new ExhaustiveUniformDistributionCheck(6, 2).permutations((n, k, randomSupplier) -> {
             ChoosingAccumulator<Integer> accumulator = new ChoosingAccumulator<>();
-            IntStream.rangeClosed(1, n).forEach(i -> accumulator.accumulate(i, k, ThreadLocalRandom.current()));
-            return accumulator.toShuffledList(ThreadLocalRandom.current());
+            IntStream.rangeClosed(1, n).forEach(i -> accumulator.accumulate(i, k, randomSupplier.get()));
+            return accumulator.toShuffledList(randomSupplier.get());
         });
     }
 
     @Test
     void combine() {
-        new UniformDistributionCheck(10, 2).using((n, k) -> {
+        new ExhaustiveUniformDistributionCheck(10, 2).permutations((n, k, randomSupplier) -> {
             ChoosingAccumulator<Integer> evenAccumulator = new ChoosingAccumulator<>();
             ChoosingAccumulator<Integer> oddAccumulator = new ChoosingAccumulator<>();
-            IntStream.rangeClosed(1, n).forEach(i -> (i % 2 == 0 ? evenAccumulator : oddAccumulator).accumulate(i, k, ThreadLocalRandom.current()));
+            IntStream.rangeClosed(1, n).forEach(i -> (i % 2 == 0 ? evenAccumulator : oddAccumulator).accumulate(i, k, randomSupplier.get()));
             return evenAccumulator
-                    .combine(oddAccumulator, k, ThreadLocalRandom.current())
-                    .toShuffledList(ThreadLocalRandom.current());
+                    .combine(oddAccumulator, k, randomSupplier.get())
+                    .toShuffledList(randomSupplier.get());
         });
     }
 
     @Test
     void badCombine() {
-        new UniformDistributionCheck(6, 2).using((n, k) -> {
+        new ExhaustiveUniformDistributionCheck(6, 2).permutations((n, k, randomSupplier) -> {
             ChoosingAccumulator<Integer> evenAccumulator = new ChoosingAccumulator<>();
             ChoosingAccumulator<Integer> oddAccumulator = new ChoosingAccumulator<>();
-            IntStream.rangeClosed(1, n).forEach(i -> (i % 2 == 0 ? evenAccumulator : oddAccumulator).accumulate(i, k, ThreadLocalRandom.current()));
+            IntStream.rangeClosed(1, n).forEach(i -> (i % 2 == 0 ? evenAccumulator : oddAccumulator).accumulate(i, k, randomSupplier.get()));
             return evenAccumulator
-                    .badCombine(oddAccumulator, k, ThreadLocalRandom.current())
-                    .toShuffledList(ThreadLocalRandom.current());
+                    .badCombine(oddAccumulator, k, randomSupplier.get())
+                    .toShuffledList(randomSupplier.get());
         });
     }
 }

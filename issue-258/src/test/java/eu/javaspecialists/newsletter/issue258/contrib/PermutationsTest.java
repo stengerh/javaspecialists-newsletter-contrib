@@ -23,7 +23,7 @@ class PermutationsTest {
     @Test
     void pickFromList() {
         new UniformDistributionCheck(4, 3).using((n, k) -> {
-            List<Integer> list = IntStream.rangeClosed(1, k)
+            List<Integer> list = IntStream.rangeClosed(1, n)
                     .boxed()
                     .collect(collectingAndThen(
                             toCollection(LinkedList::new),
@@ -35,7 +35,7 @@ class PermutationsTest {
     @Test
     void pickFromIterable() {
         new UniformDistributionCheck(4, 3).using((n, k) -> {
-            Set<Integer> list = IntStream.rangeClosed(1, k)
+            Set<Integer> list = IntStream.rangeClosed(1, n)
                     .boxed()
                     .collect(toSet());
             return Permutations.chooseFromIterable(list, k, ThreadLocalRandom.current());

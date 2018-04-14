@@ -11,7 +11,11 @@ class ChoosingShuffleCollectorTest {
 
     @Test
     void uniformDistribution() {
-        new UniformDistributionCheck(4, 3).using(this::choose);
+        new ExhaustiveUniformDistributionCheck(5, 3)
+                .permutations((n, k, randomSupplier) ->
+                        IntStream.rangeClosed(1, n)
+                                .boxed()
+                                .collect(ChoosingShuffleCollector.chooseAtMost(k, randomSupplier)));
     }
 
     @Test

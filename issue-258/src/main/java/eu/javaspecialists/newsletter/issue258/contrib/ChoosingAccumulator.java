@@ -50,7 +50,7 @@ public class ChoosingAccumulator<T> {
     }
 
     public Set<T> toSet() {
-        return new HashSet<>(taken);
+        return new TreeSet<>(taken);
     }
 
     public List<T> toShuffledList(Random random) {
