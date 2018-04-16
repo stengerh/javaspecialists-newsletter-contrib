@@ -26,16 +26,4 @@ class ChoosingAccumulatorTest {
                     .toShuffledList(randomSupplier.get());
         });
     }
-
-    @Test
-    void badCombine() {
-        new ExhaustiveUniformDistributionCheck(6, 2).permutations((n, k, randomSupplier) -> {
-            ChoosingAccumulator<Integer> evenAccumulator = new ChoosingAccumulator<>();
-            ChoosingAccumulator<Integer> oddAccumulator = new ChoosingAccumulator<>();
-            IntStream.rangeClosed(1, n).forEach(i -> (i % 2 == 0 ? evenAccumulator : oddAccumulator).accumulate(i, k, randomSupplier.get()));
-            return evenAccumulator
-                    .badCombine(oddAccumulator, k, randomSupplier.get())
-                    .toShuffledList(randomSupplier.get());
-        });
-    }
 }

@@ -44,11 +44,6 @@ public class ChoosingAccumulator<T> {
         return (random.nextInt(this.seen + other.seen) < this.seen) ? this : other;
     }
 
-    public ChoosingAccumulator<T> badCombine(ChoosingAccumulator<T> other, int limit, Random random) {
-        other.taken.forEach(obj -> accumulate(obj, limit, random));
-        return this;
-    }
-
     public Set<T> toSet() {
         return new TreeSet<>(taken);
     }
