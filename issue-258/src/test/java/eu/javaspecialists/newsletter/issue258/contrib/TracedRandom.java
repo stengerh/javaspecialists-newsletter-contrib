@@ -50,6 +50,9 @@ public class TracedRandom extends Random {
     }
 
     public void nextTrace() {
+        if (nextChoice != choices.size()) {
+            throw new NondeterministicExecutionException();
+        }
         int index = nextChoice - 1;
         while (index >= 0) {
             NextInt choice = choices.get(index);
@@ -74,24 +77,18 @@ public class TracedRandom extends Random {
             throw new IllegalArgumentException("bound must be positive");
         }
 
+        NextInt choice;
         if (nextChoice == choices.size()) {
-            NextInt choice = new NextInt(bound);
+            choice = new NextInt(bound);
             choices.add(choice);
-            nextChoice += 1;
-            return choice.current();
         } else {
-            NextInt choice = choices.get(nextChoice);
-            if (choice.bound == bound) {
-                nextChoice += 1;
-                return choice.current();
-            } else {
-                truncate(nextChoice);
-                NextInt newChoice = new NextInt(bound);
-                choices.add(newChoice);
-                nextChoice += 1;
-                return newChoice.current();
+            choice = choices.get(nextChoice);
+            if (choice.bound != bound) {
+                throw new NondeterministicExecutionException();
             }
         }
+        nextChoice += 1;
+        return choice.current();
     }
 
     private void truncate(int size) {
